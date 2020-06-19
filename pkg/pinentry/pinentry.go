@@ -22,7 +22,12 @@ type Client struct {
 
 // New creates a new pinentry client
 func New() (*Client, error) {
-	cmd := exec.Command(GetBinary())
+	binary, ok := os.LookupEnv("GOPASS_PINENTRY");
+	if !ok {
+		binary = GetBinary()
+	}
+
+	cmd := exec.Command(binary);
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
 		return nil, err
